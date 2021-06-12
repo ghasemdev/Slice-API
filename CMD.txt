@@ -1,0 +1,38 @@
+RUN PROJECT -------------------------------------------------------------
+gradlew.bat run
+
+PROGUARD ----------------------------------------------------------------
+gradlew.bat minimizedJar
+java -jar D:\Kotlin\Projects\Slice-API\build\libs\slice-api-0.1.0.min.jar
+
+DOCKER ---------------------------------------------------------------------------------------------
+1. docker run --name <container name> -p 5555:5432 -v slice_db:/var/lib/postgresql/data -e POSTGRES_USER=jakode2020 -e POSTGRES_PASSWORD=e-UuWUX8=-(W)RGG -e POSTGRES_DB=slice_db -e TZ=Asia/Tehran -d postgres:11
+2. docker exec -it <container name> bash
+3. psql -d slice_db -U jakode2020
+         .
+         .
+         .
+
+DOCKER BUILD IMAGE -------------------------------------------------------
+0. login first => docker login  (password = Pg4Dxcwe?m~v;P&)
+1. docker build . -t <image name> && docker run --name <container name> -p 8080:8080 -t <image name>
+
+change image name => docker tag <image id> <image name>:<tag>
+
+docker-compose build web
+docker-compose up
+
+HEROKU --------------------------------------------------------------------
+heroku login
+heroku create -a <app name>
+heroku stack:set container -a <app name>
+heroku addons:create heroku-postgresql:hobby-dev -a <app name>
+
+git init
+git remote add heroku https://git.heroku.com/jakode-cats-app.git
+git checkout -b master
+git add .
+git commit -m "initial"
+git push -u heroku master
+
+heroku logs --tail

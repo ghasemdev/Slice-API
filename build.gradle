@@ -1,5 +1,17 @@
+import proguard.gradle.ProGuardTask
+
+buildscript {
+    ext.proguard_version = '6.1.0'
+    dependencies {
+        classpath "net.sf.proguard:proguard-gradle:$proguard_version"
+    }
+}
+
 plugins {
     id 'org.jetbrains.kotlin.jvm' version "1.5.0"
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.0'
+    id 'org.jetbrains.kotlin.plugin.allopen' version "1.5.0"
+    id "com.github.johnrengelman.shadow" version "5.2.0"
     id 'application'
 }
 
@@ -11,8 +23,53 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    compile fileTree(dir: 'libs', include: '*.jar')
+
+    // Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-native-mt'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0-native-mt'
+
+    // Koin
+    implementation 'io.insert-koin:koin-ktor:3.0.2'
+    testImplementation 'io.insert-koin:koin-test:3.0.2'
+
+    // Ktor
+    implementation 'io.ktor:ktor-server-core:1.6.0'
     implementation 'io.ktor:ktor-server-netty:1.6.0'
+    implementation 'io.ktor:ktor-websockets:1.6.0'
+    implementation 'io.ktor:ktor-serialization:1.6.0'
+
+    // Exposed
+    implementation 'org.jetbrains.exposed:exposed-core:0.32.1'
+    implementation 'org.jetbrains.exposed:exposed-dao:0.32.1'
+    implementation 'org.jetbrains.exposed:exposed-jdbc:0.32.1'
+    implementation 'org.jetbrains.exposed:exposed-java-time:0.32.1'
+    testImplementation 'io.ktor:ktor-server-tests:1.6.0'
+
+    // Database Tools
+    implementation 'org.postgresql:postgresql:42.2.20.jre7'
+    implementation 'org.flywaydb:flyway-core:7.9.2'
+    implementation "com.zaxxer:HikariCP:4.0.3"
+
+    // Serialization Json
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1'
+
+    // Email Service
+    implementation "org.apache.commons:commons-email:1.5"
+
+    // Logback
+    implementation "ch.qos.logback:logback-classic:1.2.3"
+
+    // JUnit test
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"
+
+    // Assertions
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    testImplementation 'com.google.truth:truth:1.1.3'
+
+    // Mockito
+    testImplementation 'org.mockito:mockito-core:3.11.0'
 }
 
 test {
@@ -29,4 +86,39 @@ compileTestKotlin {
 
 application {
     mainClassName = 'ServerKt'
+}
+
+shadowJar {
+    baseName 'slice-api'
+    classifier null
+    version '0.1.0'
+}
+
+task minimizedJar(type: ProGuardTask, dependsOn: shadowJar) {
+    injars "build/libs/slice-api-0.1.0.jar"
+    outjars "build/libs/slice-api-0.1.0.min.jar"
+    libraryjars "C:/Program Files/Java/jre1.8.0_291/lib/rt.jar"
+    printmapping "build/libs/slice-api-0.1.0.map"
+    ignorewarnings
+    dontobfuscate
+    dontoptimize
+    dontwarn
+
+    def keepClasses = [
+            'io.ktor.server.netty.DevelopmentEngine',
+            'kotlin.reflect.jvm.internal.**',
+            'ServerKt',
+            'kotlin.text.RegexOption'
+    ]
+
+    for (keepClass in keepClasses) {
+        keep access: 'public', name: keepClass, {
+            method access: 'public'
+            method access: 'private'
+        }
+    }
+}
+
+allOpen {
+    annotation("utils.Mockable")
 }

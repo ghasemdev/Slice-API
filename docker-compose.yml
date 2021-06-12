@@ -1,0 +1,23 @@
+version: '3'
+services:
+  slice_database:
+    image: postgres:11
+    ports:
+      - 5555:5432
+    environment:
+      - POSTGRES_USER=jakode2020
+      - POSTGRES_PASSWORD=e-UuWUX8=-(W)RGG
+      - POSTGRES_DB=slice_db
+      - TZ=Asia/Tehran
+  web:
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - slice_database
+    environment:
+      - DB_HOST=slice_database
+      - DB_PORT=5432
+      - DB_NAME=slice_db
+      - DB_USER=jakode2020
+      - DB_PASSWORD=e-UuWUX8=-(W)RGG
