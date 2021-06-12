@@ -30,8 +30,8 @@ dependencies {
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0-native-mt'
 
     // Koin
-    implementation 'io.insert-koin:koin-ktor:3.0.2'
-    testImplementation 'io.insert-koin:koin-test:3.0.2'
+    implementation 'io.insert-koin:koin-ktor:2.2.3'
+    testImplementation 'io.insert-koin:koin-test:2.2.3'
 
     // Ktor
     implementation 'io.ktor:ktor-server-core:1.6.0'
@@ -48,7 +48,7 @@ dependencies {
 
     // Database Tools
     implementation 'org.postgresql:postgresql:42.2.20.jre7'
-    implementation 'org.flywaydb:flyway-core:7.9.2'
+    implementation 'org.flywaydb:flyway-core:7.10.0'
     implementation "com.zaxxer:HikariCP:4.0.3"
 
     // Serialization Json
@@ -64,6 +64,7 @@ dependencies {
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"
 
     // Assertions
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
     testImplementation 'com.google.truth:truth:1.1.3'
@@ -105,10 +106,11 @@ task minimizedJar(type: ProGuardTask, dependsOn: shadowJar) {
     dontwarn
 
     def keepClasses = [
-            'io.ktor.server.netty.DevelopmentEngine',
+            'io.ktor.server.netty.EngineMain',   // The EngineMain you use, netty in this case.
             'kotlin.reflect.jvm.internal.**',
-            'ServerKt',
-            'kotlin.text.RegexOption'
+            'ServerKt',                          // The class containing your module defined in the application.conf
+            'kotlin.text.RegexOption',
+            'kotlinx.coroutines.**'
     ]
 
     for (keepClass in keepClasses) {
