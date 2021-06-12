@@ -29,7 +29,7 @@ heroku stack:set container -a <app name>
 heroku addons:create heroku-postgresql:hobby-dev -a <app name>
 
 git init
-git remote add heroku https://git.heroku.com/jakode-cats-app.git
+git remote add heroku https://git.heroku.com/jakode-slice-api.git
 git checkout -b master
 git add .
 git commit -m "initial"
