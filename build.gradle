@@ -1,22 +1,12 @@
-import proguard.gradle.ProGuardTask
-
-buildscript {
-    ext.proguard_version = '6.1.0'
-    dependencies {
-        classpath "net.sf.proguard:proguard-gradle:$proguard_version"
-    }
-}
-
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version "1.5.0"
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.0'
-    id 'org.jetbrains.kotlin.plugin.allopen' version "1.5.0"
-    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id 'org.jetbrains.kotlin.jvm' version "1.5.10"
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.10'
+    id 'org.jetbrains.kotlin.plugin.allopen' version "1.5.10"
     id 'application'
 }
 
 group = 'me.lenovo'
-version = '0.1.0'
+version = '1.0.0'
 
 repositories {
     mavenCentral()
@@ -38,13 +28,13 @@ dependencies {
     implementation 'io.ktor:ktor-server-netty:1.6.0'
     implementation 'io.ktor:ktor-websockets:1.6.0'
     implementation 'io.ktor:ktor-serialization:1.6.0'
+    testImplementation 'io.ktor:ktor-server-tests:1.6.0'
 
     // Exposed
     implementation 'org.jetbrains.exposed:exposed-core:0.32.1'
     implementation 'org.jetbrains.exposed:exposed-dao:0.32.1'
     implementation 'org.jetbrains.exposed:exposed-jdbc:0.32.1'
     implementation 'org.jetbrains.exposed:exposed-java-time:0.32.1'
-    testImplementation 'io.ktor:ktor-server-tests:1.6.0'
 
     // Database Tools
     implementation 'org.postgresql:postgresql:42.2.20.jre7'
@@ -62,11 +52,10 @@ dependencies {
 
     // JUnit test
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"
-
-    // Assertions
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+
+    // Assertions
     testImplementation 'com.google.truth:truth:1.1.3'
 
     // Mockito
@@ -74,7 +63,7 @@ dependencies {
 }
 
 test {
-    useJUnit()
+    useJUnitPlatform()
 }
 
 compileKotlin {
@@ -89,36 +78,17 @@ application {
     mainClassName = 'ServerKt'
 }
 
-shadowJar {
-    baseName 'slice-api'
-    classifier null
-    version '0.1.0'
-}
 
-task minimizedJar(type: ProGuardTask, dependsOn: shadowJar) {
-    injars "build/libs/slice-api-0.1.0.jar"
-    outjars "build/libs/slice-api-0.1.0.min.jar"
-    libraryjars "C:/Program Files/Java/jre1.8.0_291/lib/rt.jar"
-    printmapping "build/libs/slice-api-0.1.0.map"
-    ignorewarnings
-    dontobfuscate
-    dontoptimize
-    dontwarn
-
-    def keepClasses = [
-            'io.ktor.server.netty.EngineMain',   // The EngineMain you use, netty in this case.
-            'kotlin.reflect.jvm.internal.**',
-            'ServerKt',                          // The class containing your module defined in the application.conf
-            'kotlin.text.RegexOption',
-            'kotlinx.coroutines.**'
-    ]
-
-    for (keepClass in keepClasses) {
-        keep access: 'public', name: keepClass, {
-            method access: 'public'
-            method access: 'private'
+jar {
+    manifest {
+        attributes "Main-Class": mainClassName
+    }
+    from {
+        configurations.runtimeClasspath.collect {
+            f -> f.isDirectory() ? f : zipTree(f)
         }
     }
+    archiveName "slice-api.jar"
 }
 
 allOpen {
