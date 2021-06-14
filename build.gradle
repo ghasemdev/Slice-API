@@ -10,6 +10,7 @@ version = '1.0.0'
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -46,6 +47,9 @@ dependencies {
 
     // Email Service
     implementation "org.apache.commons:commons-email:1.5"
+
+    // SMS Service
+    implementation 'com.github.kavenegar:kavenegar-java:v2.0.3'
 
     // Logback
     implementation "ch.qos.logback:logback-classic:1.2.3"

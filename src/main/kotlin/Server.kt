@@ -2,12 +2,12 @@ import db.DatabaseFactory
 import di.ktorModule
 import io.ktor.application.*
 import io.ktor.features.*
-import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import org.koin.ktor.ext.Koin
+import routes.validation.validationRouter
 
 fun Application.module() {
     // Default header for response
@@ -27,16 +27,10 @@ fun Application.module() {
     DatabaseFactory.connectAndMigrate()
 
     install(Routing) {
-        text()
+        validationRouter()
     }
 }
 
 fun main(args: Array<String>) {
     embeddedServer(Netty, commandLineEnvironment(args)).start(wait = true)
-}
-
-private fun Route.text() {
-    get {
-        call.respondText("Slice Pizza")
-    }
 }
