@@ -8,52 +8,52 @@ import io.ktor.routing.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import model.Error
+import model.Email
+import model.ErrorResponse
+import model.Phone
 import org.koin.ktor.ext.inject
 import utils.Crypto
-import utils.isEmail
-import utils.isPhoneNumber
 import utils.toHex
 
 fun Route.validationRouter() {
     val validationService: ValidationService by inject()
     val crypto: Crypto by inject()
 
-    suspend fun sendOtp(phone: String, massage: String, otp: String) {
+    suspend fun sendOtp(phone: Phone, massage: String, otp: String) {
         coroutineScope {
             validationService.apply {
                 deleteExpiredOtps()
                 val send = async { sendOtp(phone, massage) }
-                val insert = async { insertOtp(phone = crypto.hashContent(phone).toHex(), otp = otp) }
+                val insert = async { insertOtp(phone = Phone(crypto.hashContent(phone.value).toHex()), otp = otp) }
 
                 awaitAll(send, insert)
             }
         }
     }
 
-    suspend fun sendOtpWithEmail(email: String, massage: String, otp: String) {
+    suspend fun sendOtpWithEmail(email: Email, massage: String, otp: String) {
         coroutineScope {
             validationService.apply {
                 deleteExpiredOtps()
                 val send = async { sendOtpWithEmail(email, massage) }
-                val insert = async { insertOtp(email = crypto.hashContent(email).toHex(), otp = otp) }
+                val insert = async { insertOtp(email = Email(crypto.hashContent(email.value).toHex()), otp = otp) }
 
                 awaitAll(send, insert)
             }
         }
     }
 
-    post("/validation") {
+    post("/account/validation") {
         with(call) {
             val contentType = request.contentType()
-            if (contentType == ContentType.parse("application/x-www-form-urlencoded")) {
+            if (contentType == ContentType.Application.FormUrlEncoded) {
                 val body = receiveParameters()
-                val phone = body["phone"]
-                val email = body["email"]
+                val phone = body["phone"]?.trim()
+                val email = body["email"]?.trim()
 
                 // bad request when phone and email null or empty
                 if (phone.isNullOrEmpty() && email.isNullOrEmpty()) {
-                    respond(HttpStatusCode.BadRequest)
+                    respond(HttpStatusCode.BadRequest, ErrorResponse("phone number or email address is empty or null"))
                 }
 
                 // create otp
@@ -62,16 +62,16 @@ fun Route.validationRouter() {
                 val massage = "« Slice »\nYour membership verification code :\n $otp"
 
                 // phone validation
-                if (phone != null && phone.isPhoneNumber()) {
-                    sendOtp(phone.trim(), massage, otpHashed)
-                    respond(HttpStatusCode.OK)
+                if (phone != null && Phone(phone).isValid()) {
+                    sendOtp(Phone(phone), massage, otpHashed)
+                    respond(HttpStatusCode.NoContent)
                 }
                 // email validation
-                else if (email != null && email.isEmail() && email.length <= 50) {
-                    sendOtpWithEmail(email.trim(), massage, otpHashed)
-                    respond(HttpStatusCode.OK)
+                else if (email != null && Email(email).isValid() && email.length <= 50) {
+                    sendOtpWithEmail(Email(email), massage, otpHashed)
+                    respond(HttpStatusCode.NoContent)
                 } else {
-                    respond(HttpStatusCode.BadRequest, Error("phone number or email address isn't valid"))
+                    respond(HttpStatusCode.BadRequest, ErrorResponse("phone number or email address isn't valid"))
                 }
             } else respond(HttpStatusCode.UnsupportedMediaType)
         }

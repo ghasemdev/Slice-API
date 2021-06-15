@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="utils.CryptoTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2021-06-15T08:32:02" hostname="DESKTOP-247518Q" time="0.431">
+  <properties/>
+  <testcase name="generate otp without character()" classname="utils.CryptoTest" time="0.065"/>
+  <testcase name="generate otp()" classname="utils.CryptoTest" time="0.002"/>
+  <testcase name="generate password without symbols()" classname="utils.CryptoTest" time="0.002"/>
+  <testcase name="generate password()" classname="utils.CryptoTest" time="0.002"/>
+  <testcase name="hash password()" classname="utils.CryptoTest" time="0.19"/>
+  <testcase name="cryptography()" classname="utils.CryptoTest" time="0.012"/>
+  <testcase name="length hashes and encrypted content()" classname="utils.CryptoTest" time="0.154"/>
+  <system-out><![CDATA[generate otp with out character : 34510
+generate otp : KViaaX
+
+generate password with out symbols : E2IHfzN6
+generate password : Fr$mRhV1
+
+hash password toHex : DA 4C 79 A8 FF E0 95 24 E8 E6 C3 1B C6 A1 AE 9B
+hash password toReversedHex : 9B AE A1 C6 1B C3 E6 E8 24 95 E0 FF A8 79 4C DA
+hash password toDec : 218761211682552241493623223019527198161174155
+hash password toReversedDec : 155174161198271952302323614922425516812176218
+
+cryptography text : hi my name is jakode
+cryptography encrypt : hrZRAbGUsVM6sDO5AVadIyxTFm2UP2i/nktNwGkrB7E=
+
+hashedPhone length : 47
+hashedEmail length : 47
+phoneEncrypt length : 24
+emailEncrypt length : 88
+
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

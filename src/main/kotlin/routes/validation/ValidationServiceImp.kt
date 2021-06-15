@@ -4,28 +4,33 @@ import com.kavenegar.sdk.KavenegarApi
 import com.kavenegar.sdk.excepctions.ApiException
 import com.kavenegar.sdk.excepctions.HttpException
 import db.DatabaseFactory.dbQuery
-import db.table.Otp
+import db.table.OtpsTable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import model.Email
+import model.EmailServer
+import model.Phone
 import org.apache.commons.mail.DefaultAuthenticator
 import org.apache.commons.mail.SimpleEmail
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.*
 import java.time.LocalDateTime
+import java.util.*
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 class ValidationServiceImp constructor(
     private val apiKey: String,
-    private val emailServer: Email,
-    private val expiredTime: Long
+    private val emailServer: EmailServer,
+    private val expiredTime: Duration
 ) : ValidationService {
 
-    override suspend fun sendOtp(number: String, massage: String): Unit = coroutineScope {
+    override suspend fun sendOtp(phone: Phone, massage: String): Unit = coroutineScope {
         withContext(Dispatchers.Default) {
             try {
                 val api = KavenegarApi(apiKey)
-                api.send("1000596446", number, massage)
+                api.send("1000596446", phone.value, massage)
             } catch (exception: HttpException) {
                 print("HttpException  : " + exception.message)
             } catch (exception: ApiException) {
@@ -34,7 +39,7 @@ class ValidationServiceImp constructor(
         }
     }
 
-    override suspend fun sendOtpWithEmail(email: String, massage: String): Unit = coroutineScope {
+    override suspend fun sendOtpWithEmail(email: Email, massage: String): Unit = coroutineScope {
         withContext(Dispatchers.Default) {
             SimpleEmail().apply {
                 hostName = "smtp.gmail.com"
@@ -44,34 +49,44 @@ class ValidationServiceImp constructor(
                 setFrom(emailServer.email)
                 subject = "Validation"
                 setMsg(massage)
-                addTo(email)
+                addTo(email.value)
                 send()
             }
         }
     }
 
-    override suspend fun insertOtp(phone: String?, email: String?, otp: String): Unit = dbQuery {
-        Otp.insert { otpTable ->
-            phone?.let { otpTable[Otp.phone] = phone }
-            email?.let { otpTable[Otp.email] = email }
-            otpTable[Otp.otp] = otp
+    override suspend fun insertOtp(phone: Phone?, email: Email?, otp: String): Unit = dbQuery {
+        OtpsTable.insert { otpTable ->
+            phone?.let { otpTable[OtpsTable.phone] = phone.value }
+            email?.let { otpTable[OtpsTable.email] = email.value }
+            otpTable[OtpsTable.otp] = otp
         }
     }
 
     override suspend fun deleteExpiredOtps(): Unit = dbQuery {
-        val createAt = LocalDateTime.now().minusSeconds(expiredTime)
-        Otp.deleteWhere { Otp.createAt lessEq createAt }
+        val createAt = LocalDateTime.now().minusMinutes(expiredTime.inWholeMinutes)
+        OtpsTable.deleteWhere { OtpsTable.createAt lessEq createAt }
     }
 
-/*override suspend fun validateOtp(otp: String): Boolean = dbQuery {
-    val createAt = LocalDateTime.now().minusSeconds(expiredTime)
-    Otp.select { Otp.otp eq otp and (Otp.createAt greater createAt) }.firstOrNull()?.let {
-        deleteOtp(it[Otp.userId].value)
-        true
-    } ?: false
-}
+    override suspend fun validateOtp(phone: Phone?, email: Email?, otp: String): Boolean = dbQuery {
+        val createAt = LocalDateTime.now().minusMinutes(expiredTime.inWholeMinutes)
+        val query = OtpsTable.select { OtpsTable.otp eq otp and (OtpsTable.createAt greater createAt) }
 
-private suspend fun deleteOtp(id: Long) {
-    dbQuery { Otp.deleteWhere { Otp.userId eq id } }
-}*/
+        if (phone != null) {
+            query.andWhere { OtpsTable.phone eq phone.value }.firstOrNull()?.let {
+                deleteOtp(it[OtpsTable.id].value)
+                return@dbQuery true
+            }
+        } else if (email != null) {
+            query.andWhere { OtpsTable.email eq email.value }.firstOrNull()?.let {
+                deleteOtp(it[OtpsTable.id].value)
+                return@dbQuery true
+            }
+        }
+        false
+    }
+
+    private suspend fun deleteOtp(id: UUID) {
+        dbQuery { OtpsTable.deleteWhere { OtpsTable.id eq id } }
+    }
 }

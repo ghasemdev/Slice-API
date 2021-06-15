@@ -21,14 +21,16 @@ dependencies {
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0-native-mt'
 
     // Koin
-    implementation 'io.insert-koin:koin-ktor:2.2.3'
-    testImplementation 'io.insert-koin:koin-test:2.2.3'
+    implementation 'io.insert-koin:koin-ktor:3.1.0'
+    testImplementation "io.insert-koin:koin-test-junit5:3.1.0"
 
     // Ktor
     implementation 'io.ktor:ktor-server-core:1.6.0'
     implementation 'io.ktor:ktor-server-netty:1.6.0'
     implementation 'io.ktor:ktor-websockets:1.6.0'
     implementation 'io.ktor:ktor-serialization:1.6.0'
+    implementation "io.ktor:ktor-auth:1.6.0"
+    implementation "io.ktor:ktor-auth-jwt:1.6.0"
     testImplementation 'io.ktor:ktor-server-tests:1.6.0'
 
     // Exposed
@@ -55,9 +57,9 @@ dependencies {
     implementation "ch.qos.logback:logback-classic:1.2.3"
 
     // JUnit test
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:5.7.2"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.2"
 
     // Assertions
     testImplementation 'com.google.truth:truth:1.1.3'

@@ -1,9 +1,12 @@
 package routes.validation
 
+import model.Email
+import model.Phone
+
 interface ValidationService {
-    suspend fun sendOtp(number: String, massage: String)
-    suspend fun sendOtpWithEmail(email: String, massage: String)
-    suspend fun insertOtp(phone: String? = null, email: String? = null, otp: String)
+    suspend fun sendOtp(phone: Phone, massage: String)
+    suspend fun sendOtpWithEmail(email: Email, massage: String)
+    suspend fun insertOtp(phone: Phone? = null, email: Email? = null, otp: String)
+    suspend fun validateOtp(phone: Phone? = null, email: Email? = null, otp: String): Boolean
     suspend fun deleteExpiredOtps()
-//    suspend fun validateOtp(otp: String): Boolean
 }

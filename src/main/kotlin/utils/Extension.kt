@@ -18,12 +18,6 @@ fun String.isEnglish() = this.matches(Regex("\\w*"))
 /** check is a number*/
 fun String.isNumber() = this.matches(Regex("\\d*"))
 
-/** check is a phone number*/
-fun String.isPhoneNumber() = this.isNotEmpty() && this.trim().matches(Regex("09\\d{9}"))
-
-/** check is a valid email*/
-fun String.isEmail() = this.isNotEmpty() && this.trim().matches(Regex("^[a-zA-Z0-9_!#\$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+\$"))
-
 /** byte array to hex*/
 fun ByteArray.toHex() = this.joinToString(" ") { "%02X".format(it) }
 
@@ -44,7 +38,7 @@ fun StringBuilder.space(): StringBuilder = append(" ")
  * @param methodName from rule name
  * @param massage
  */
-fun testLog(methodName: String, isDoubleNewLine: Boolean = true, massage: () -> String) {
+fun testLog(methodName: String, isDoubleNewLine: Boolean = false, massage: () -> Any) {
     println("$methodName : ${massage()}${if (isDoubleNewLine) "\n" else ""}")
 }
 

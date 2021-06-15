@@ -1,0 +1,19 @@
+)generate otp with out character : 34510
+generate otp : KViaaX
+
+/generate password with out symbols : E2IHfzN6
+generate password : Fr$mRhV1
+
+Ghash password toHex : DA 4C 79 A8 FF E0 95 24 E8 E6 C3 1B C6 A1 AE 9B
+Ohash password toReversedHex : 9B AE A1 C6 1B C3 E6 E8 24 95 E0 FF A8 79 4C DA
+Ehash password toDec : 218761211682552241493623223019527198161174155
+Lhash password toReversedDec : 155174161198271952302323614922425516812176218
+
+*cryptography text : hi my name is jakode
+Dcryptography encrypt : hrZRAbGUsVM6sDO5AVadIyxTFm2UP2i/nktNwGkrB7E=
+
+hashedPhone length : 47
+hashedEmail length : 47
+phoneEncrypt length : 24
+emailEncrypt length : 88
+

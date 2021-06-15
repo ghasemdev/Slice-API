@@ -51,7 +51,7 @@ object DatabaseFactory {
         jdbcUrl = "jdbc:postgresql://$host:$port/$dbName"
         username = dbUser
         password = dbPassword
-        maximumPoolSize = 10
+        maximumPoolSize = 20
         isAutoCommit = false
         transactionIsolation = "TRANSACTION_REPEATABLE_READ"
         validate()
