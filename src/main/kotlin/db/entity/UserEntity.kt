@@ -39,8 +39,8 @@ val UserEntity.asUser: User
         isMarketer = this.isMarketer,
         nickname = this.nickname,
         profilePicture = profilePicture.let { "/files/pictures/profile/${crypto.urlEncoding(this.id.toString())}" },
-        phone = this.phone?.let { Phone(it) },
-        email = this.email?.let { Email(it) },
+        phone = this.phone?.let { Phone(crypto.decrypt(it)) },
+        email = this.email?.let { Email(crypto.decrypt(it)) },
         locations = this.locations.toList().map {
             Location(it.locationName, it.latitude, it.longitude)
         }
