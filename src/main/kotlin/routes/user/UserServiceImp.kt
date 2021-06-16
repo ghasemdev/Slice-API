@@ -10,8 +10,12 @@ import utils.JwtConfig
 class UserServiceImp : UserService {
     override suspend fun create(user: User): Any = dbQuery {
         try {
+            // create user in database
             val userEntity = UserEntity.new(user)
-            val token = JwtConfig.generateToken(PrincipalJwt(user.nickname, user.phone, user.email))
+            val id = userEntity.id.value.toString()
+            val name = userEntity.nickname
+            // generate token
+            val token = JwtConfig.generateToken(JwtUser(id, name))
             UserResponse(token, userEntity.asUser)
         } catch (Exception: Exception) {
             ErrorResponse("A user with this email or phone number is already registered!!!")

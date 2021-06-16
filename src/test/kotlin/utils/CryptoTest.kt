@@ -111,4 +111,17 @@ class CryptoTest : KoinTest {
         assertThat(phoneEncrypt.length).isEqualTo(24)
         assertThat(emailEncrypt.length).isEqualTo(88)
     }
+
+    @Test
+    @Order(8)
+    fun `Url encoding`() {
+        val originalUrl = "https://www.google.co.nz/?gfe_rd=cr&ei=dzbFV&gws_rd=ssl#q=java"
+        val encodingUrl = crypto.urlEncoding(originalUrl)
+        testLog("encoding url") { encodingUrl }
+        assertThat(encodingUrl).isEqualTo("aHR0cHM6Ly93d3cuZ29vZ2xlLmNvLm56Lz9nZmVfcmQ9Y3ImZWk9ZHpiRlYmZ3dzX3JkPXNzbCNxPWphdmE=")
+
+        val decodedUrl = crypto.urlDecoding(encodingUrl)
+        testLog("decoded url") { decodedUrl }
+        assertThat(decodedUrl).isEqualTo(originalUrl)
+    }
 }

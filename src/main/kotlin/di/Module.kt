@@ -2,6 +2,8 @@ package di
 
 import model.EmailServer
 import org.koin.dsl.module
+import routes.files.pictures.PictureService
+import routes.files.pictures.PictureServiceImp
 import routes.user.UserService
 import routes.user.UserServiceImp
 import routes.validation.ValidationService
@@ -12,6 +14,9 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 val ktorModule = module {
+    // Picture Service
+    single<PictureService> { PictureServiceImp() }
+
     // User Service
     single<UserService> { UserServiceImp() }
 

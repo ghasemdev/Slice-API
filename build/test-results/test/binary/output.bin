@@ -1,8 +1,8 @@
-)generate otp with out character : 34510
-generate otp : KViaaX
+)generate otp with out character : 91216
+generate otp : 1OeWUw
 
-/generate password with out symbols : E2IHfzN6
-generate password : Fr$mRhV1
+/generate password with out symbols : UFm27glW
+generate password : Q?31um7I
 
 Ghash password toHex : DA 4C 79 A8 FF E0 95 24 E8 E6 C3 1B C6 A1 AE 9B
 Ohash password toReversedHex : 9B AE A1 C6 1B C3 E6 E8 24 95 E0 FF A8 79 4C DA
@@ -17,3 +17,5 @@
 phoneEncrypt length : 24
 emailEncrypt length : 88
 
+	eencoding url : aHR0cHM6Ly93d3cuZ29vZ2xlLmNvLm56Lz9nZmVfcmQ9Y3ImZWk9ZHpiRlYmZ3dzX3JkPXNzbCNxPWphdmE=
+	Ndecoded url : https://www.google.co.nz/?gfe_rd=cr&ei=dzbFV&gws_rd=ssl#q=java

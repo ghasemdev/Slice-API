@@ -4,6 +4,7 @@ import com.kavenegar.sdk.KavenegarApi
 import com.kavenegar.sdk.excepctions.ApiException
 import com.kavenegar.sdk.excepctions.HttpException
 import db.DatabaseFactory.dbQuery
+import db.entity.UserEntity
 import db.table.OtpsTable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -39,7 +40,7 @@ class ValidationServiceImp constructor(
         }
     }
 
-    override suspend fun sendOtpWithEmail(email: Email, massage: String): Unit = coroutineScope {
+    override suspend fun sendOtp(email: Email, massage: String): Unit = coroutineScope {
         withContext(Dispatchers.Default) {
             SimpleEmail().apply {
                 hostName = "smtp.gmail.com"
@@ -88,5 +89,9 @@ class ValidationServiceImp constructor(
 
     private suspend fun deleteOtp(id: UUID) {
         dbQuery { OtpsTable.deleteWhere { OtpsTable.id eq id } }
+    }
+
+    override suspend fun validateToken(userId: String): Boolean = dbQuery {
+        UserEntity.findById(UUID.fromString(userId))?.let { true } ?: false
     }
 }

@@ -15,8 +15,9 @@ import javax.crypto.spec.SecretKeySpec
  * * Encryption & Deception
  * * OTP Generate
  * * Password Generate
+ * * Url Encoding
  * @author jakode2020
- * @since v3.0.0 04/11/2021
+ * @since v3.1.0 06/16/2021
  */
 class Crypto(private val hashSalt: String, private val secretKey: String) {
 
@@ -81,4 +82,8 @@ class Crypto(private val hashSalt: String, private val secretKey: String) {
     private fun generate(length: Int, values: String) = buildString {
         repeat(length) { append(values[random.nextInt(values.length)]) }
     }
+
+    fun urlEncoding(originalUrl: String): String = Base64.getUrlEncoder().encodeToString(originalUrl.toByteArray())
+
+    fun urlDecoding(encodedUrl: String): String = String(Base64.getUrlDecoder().decode(encodedUrl))
 }

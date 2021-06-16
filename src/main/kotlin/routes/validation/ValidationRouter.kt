@@ -19,24 +19,24 @@ fun Route.validationRouter() {
     val validationService: ValidationService by inject()
     val crypto: Crypto by inject()
 
-    suspend fun sendOtp(phone: Phone, massage: String, otp: String) {
+    suspend fun sendOtp(phone: String, massage: String, otp: String) {
         coroutineScope {
             validationService.apply {
                 deleteExpiredOtps()
-                val send = async { sendOtp(phone, massage) }
-                val insert = async { insertOtp(phone = Phone(crypto.hashContent(phone.value).toHex()), otp = otp) }
+                val send = async { sendOtp(Phone(phone), massage) }
+                val insert = async { insertOtp(phone = Phone(crypto.hashContent(phone).toHex()), otp = otp) }
 
                 awaitAll(send, insert)
             }
         }
     }
 
-    suspend fun sendOtpWithEmail(email: Email, massage: String, otp: String) {
+    suspend fun sendOtpWithEmail(email: String, massage: String, otp: String) {
         coroutineScope {
             validationService.apply {
                 deleteExpiredOtps()
-                val send = async { sendOtpWithEmail(email, massage) }
-                val insert = async { insertOtp(email = Email(crypto.hashContent(email.value).toHex()), otp = otp) }
+                val send = async { sendOtp(Email(email), massage) }
+                val insert = async { insertOtp(email = Email(crypto.hashContent(email).toHex()), otp = otp) }
 
                 awaitAll(send, insert)
             }
@@ -62,13 +62,13 @@ fun Route.validationRouter() {
                 val massage = "« Slice »\nYour membership verification code :\n $otp"
 
                 // phone validation
-                if (phone != null && Phone(phone).isValid()) {
-                    sendOtp(Phone(phone), massage, otpHashed)
+                if (phone != null && Phone.isValid(phone)) {
+                    sendOtp(phone, massage, otpHashed)
                     respond(HttpStatusCode.NoContent)
                 }
                 // email validation
-                else if (email != null && Email(email).isValid() && email.length <= 50) {
-                    sendOtpWithEmail(Email(email), massage, otpHashed)
+                else if (email != null && Email.isValid(email) && email.length <= 50) {
+                    sendOtpWithEmail(email, massage, otpHashed)
                     respond(HttpStatusCode.NoContent)
                 } else {
                     respond(HttpStatusCode.BadRequest, ErrorResponse("phone number or email address isn't valid"))

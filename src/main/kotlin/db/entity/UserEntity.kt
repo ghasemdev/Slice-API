@@ -9,6 +9,8 @@ import model.User
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
+import org.koin.java.KoinJavaComponent.inject
+import utils.Crypto
 import java.util.*
 
 class UserEntity(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -30,11 +32,13 @@ fun UserEntity.Companion.new(user: User) = UserEntity.new(UUID.randomUUID()) {
     user.email?.let { this.email = it.value }
 }
 
+private val crypto: Crypto by inject(Crypto::class.java)
+
 val UserEntity.asUser: User
     get() = User(
         isMarketer = this.isMarketer,
         nickname = this.nickname,
-        profilePicture = "",
+        profilePicture = profilePicture.let { "/files/pictures/profile/${crypto.urlEncoding(this.id.toString())}" },
         phone = this.phone?.let { Phone(it) },
         email = this.email?.let { Email(it) },
         locations = this.locations.toList().map {
