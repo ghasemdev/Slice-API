@@ -1,12 +1,16 @@
 package db.table
 
+import model.FoodCategory
+import model.FoodSize
 import org.jetbrains.exposed.dao.id.LongIdTable
-import org.jetbrains.exposed.sql.ReferenceOption
+import utils.PGEnum
 
 object FoodsTable : LongIdTable() {
     val isActive = bool("isActive").default(true)
-    val category = reference("category", FoodCategoriesTable, onDelete = ReferenceOption.SET_NULL)
-    val size = reference("size", FoodSizesTable, onDelete = ReferenceOption.SET_NULL).nullable()
+
+    val category = customEnumeration("category", "FoodCategory", { value -> FoodCategory.valueOf(value as String) }, { PGEnum("FoodCategory", it) })
+    val size = customEnumeration("size", "FoodSize", {value -> FoodSize.valueOf(value as String)}, { PGEnum("FoodSize", it) }).nullable()
+
     val name = varchar("name", 50)
     val picture = varchar("picture", 100)
     val count = integer("count").default(1)

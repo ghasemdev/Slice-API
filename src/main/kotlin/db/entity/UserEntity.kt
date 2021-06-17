@@ -2,6 +2,7 @@ package db.entity
 
 import db.table.LocationsTable
 import db.table.UsersTable
+import db.table.WishlistTable
 import model.Email
 import model.Location
 import model.Phone
@@ -24,6 +25,9 @@ class UserEntity(id: EntityID<UUID>) : UUIDEntity(id) {
 
     // referenced on location table
     val locations by LocationEntity referrersOn LocationsTable.user
+
+    // many to many relation (Each users has like n)
+    var interestedFoods by FoodEntity via WishlistTable
 }
 
 fun UserEntity.Companion.new(user: User) = UserEntity.new(UUID.randomUUID()) {
