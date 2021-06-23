@@ -13,6 +13,7 @@ import routes.files.pictures.pictureRoute
 import routes.foods.foodsRoute
 import routes.user.userRoute
 import routes.validation.validationRoute
+import routes.wishlist.wishlistRoute
 import utils.JwtConfig
 
 fun Application.module() {
@@ -39,6 +40,7 @@ fun Application.module() {
         userRoute()
         pictureRoute()
         foodsRoute()
+        wishlistRoute()
     }
 }
 

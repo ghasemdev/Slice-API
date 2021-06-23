@@ -10,12 +10,17 @@ import routes.user.UserService
 import routes.user.UserServiceImp
 import routes.validation.ValidationService
 import routes.validation.ValidationServiceImp
+import routes.wishlist.WishlistService
+import routes.wishlist.WishlistServiceImp
 import utils.Crypto
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 val ktorModule = module {
+    // Food Service
+    single<WishlistService> { WishlistServiceImp() }
+
     // Food Service
     single<FoodsService> { FoodsServiceImp() }
 
