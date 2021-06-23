@@ -13,7 +13,7 @@ class FoodEntity(id: EntityID<Long>) : LongEntity(id) {
     var size by FoodsTable.size
     var name by FoodsTable.name
     var picture by FoodsTable.picture
-    var count by FoodsTable.count
+    var quantity by FoodsTable.quantity
     var salesNumber by FoodsTable.salesNumber
     var price by FoodsTable.price
     var discount by FoodsTable.discount

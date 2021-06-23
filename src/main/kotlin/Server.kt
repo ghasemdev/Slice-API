@@ -9,9 +9,10 @@ import io.ktor.serialization.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import org.koin.ktor.ext.Koin
-import routes.files.pictures.pictureRouter
-import routes.user.userRouter
-import routes.validation.validationRouter
+import routes.files.pictures.pictureRoute
+import routes.foods.foodsRoute
+import routes.user.userRoute
+import routes.validation.validationRoute
 import utils.JwtConfig
 
 fun Application.module() {
@@ -34,9 +35,10 @@ fun Application.module() {
     DatabaseFactory.connectAndMigrate()
 
     install(Routing) {
-        validationRouter()
-        userRouter()
-        pictureRouter()
+        validationRoute()
+        userRoute()
+        pictureRoute()
+        foodsRoute()
     }
 }
 

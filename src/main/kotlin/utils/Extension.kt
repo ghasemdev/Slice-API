@@ -4,6 +4,11 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
+// typealias
+typealias Price = Pair<Float, Float>
+typealias Score = Pair<Float, Float>
+typealias PreparationTime = Pair<Int, Int>
+
 // const val
 const val PASSWORD_HASH_ALGORITHM_PBKDF2_HMAC_SHA512 = "PBKDF2WithHmacSHA512"
 const val PASSWORD_HASH_ITERATIONS = 65536

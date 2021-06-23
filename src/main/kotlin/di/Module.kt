@@ -4,6 +4,8 @@ import model.EmailServer
 import org.koin.dsl.module
 import routes.files.pictures.PictureService
 import routes.files.pictures.PictureServiceImp
+import routes.foods.FoodsService
+import routes.foods.FoodsServiceImp
 import routes.user.UserService
 import routes.user.UserServiceImp
 import routes.validation.ValidationService
@@ -14,6 +16,9 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 val ktorModule = module {
+    // Food Service
+    single<FoodsService> { FoodsServiceImp() }
+
     // Picture Service
     single<PictureService> { PictureServiceImp() }
 

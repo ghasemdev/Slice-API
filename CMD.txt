@@ -36,3 +36,5 @@ git commit -m "initial"
 git push -u heroku master
 
 heroku logs --tail
+
+heroku pg:psql

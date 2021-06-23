@@ -25,12 +25,12 @@ class UserServiceImp : UserService {
 
     override suspend fun findByPhone(phone: Phone): UserResponse? = dbQuery {
         val userEntity = UserEntity.find { UsersTable.phone eq phone.value }.firstOrNull()
-        userEntity?.let { return@dbQuery findUser(it) }
+        userEntity?.let { return@dbQuery findUser(it) } ?: return@dbQuery null
     }
 
     override suspend fun findByEmail(email: Email): UserResponse? = dbQuery {
         val userEntity = UserEntity.find { UsersTable.email eq email.value }.firstOrNull()
-        userEntity?.let { return@dbQuery findUser(it) }
+        userEntity?.let { return@dbQuery findUser(it) } ?: return@dbQuery null
     }
 
     private fun findUser(userEntity: UserEntity): UserResponse {
@@ -38,13 +38,5 @@ class UserServiceImp : UserService {
         val name = userEntity.nickname
         val token = JwtConfig.generateToken(JwtUser(id, name)) // generate token
         return UserResponse(token, userEntity.asUser)
-    }
-
-    override suspend fun delete(id: String) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun update(user: User) {
-        TODO("Not yet implemented")
     }
 }
