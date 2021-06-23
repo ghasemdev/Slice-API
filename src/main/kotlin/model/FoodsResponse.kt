@@ -1,16 +1,15 @@
 package model
 
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import utils.PreparationTime
 import utils.Price
 import utils.Score
 
 @Serializable
-data class FoodsResponse(val page: Long, val count: Int, val foods: List<Food>)
-
-@Serializable
 data class Food(
     val id: Long,
+    var inWishlist: Boolean = false,
     val isActive: Boolean = true,
     val category: FoodCategory,
     val size: FoodSize? = null,
@@ -25,6 +24,33 @@ data class Food(
     val details: String,
     val preparationTime: Int = 0,
     val volume: String? = null,
+    val comments: List<Comment>? = null
+)
+
+@Serializable
+data class Comment(val user: UserComment, val content: String, @Contextual val createAt: String)
+
+@Serializable
+data class UserComment(
+    val isMarketer: Boolean = false,
+    val nickname: String,
+    val profilePicture: String? = null,
+)
+
+@Serializable
+data class FoodsResponse(val page: Long, val count: Int, val foodItems: List<FoodItems>)
+
+@Serializable
+data class FoodItems(
+    val id: Long,
+    val isActive: Boolean = true,
+    val name: String,
+    val picture: String,
+    val price: Float,
+    val discount: Int = 0,
+    val score: Float = 0F,
+    val details: String,
+    val preparationTime: Int = 0,
 )
 
 data class FoodsFilter(

@@ -1,6 +1,7 @@
 package db.entity
 
 import db.table.CommentsTable
+import model.Comment
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -16,3 +17,10 @@ class CommentEntity(id: EntityID<Long>) : LongEntity(id) {
     var content by CommentsTable.content
     var createAt by CommentsTable.createAt
 }
+
+val CommentEntity.asComment: Comment
+    get() = Comment(
+        user = this.user.asUserComment,
+        content = this.content,
+        createAt = this.createAt.toString(),
+    )

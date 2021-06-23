@@ -1,7 +1,9 @@
 package db.entity
 
-import db.table.*
-import model.*
+import db.table.CommentsTable
+import db.table.FoodsTable
+import model.Food
+import model.FoodItems
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -28,6 +30,19 @@ class FoodEntity(id: EntityID<Long>) : LongEntity(id) {
     val comments by CommentEntity referrersOn CommentsTable.food
 }
 
+val FoodEntity.asFoodItems: FoodItems
+    get() = FoodItems(
+        id = this.id.value,
+        isActive = this.isActive,
+        name = this.name,
+        picture = this.picture,
+        price = this.price,
+        discount = this.discount,
+        score = this.score,
+        details = this.details,
+        preparationTime = this.preparationTime,
+    )
+
 val FoodEntity.asFood: Food
     get() = Food(
         id = this.id.value,
@@ -45,4 +60,5 @@ val FoodEntity.asFood: Food
         details = this.details,
         preparationTime = this.preparationTime,
         volume = this.volume,
+        comments = this.comments.toList().map { it.asComment }
     )

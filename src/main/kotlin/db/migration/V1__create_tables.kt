@@ -1,5 +1,6 @@
 package db.migration
 
+import db.entity.CommentEntity
 import db.entity.FoodEntity
 import db.entity.LocationEntity
 import db.entity.UserEntity
@@ -15,6 +16,8 @@ import utils.CSV
 import java.util.*
 
 class V1__create_tables : BaseJavaMigration() {
+    private lateinit var admin: UserEntity
+
     override fun migrate(context: Context?) {
         transaction {
             foodCategory()
@@ -31,6 +34,7 @@ class V1__create_tables : BaseJavaMigration() {
 
             createAdmin()
             importData()
+            addComment()
         }
     }
 
@@ -43,13 +47,13 @@ class V1__create_tables : BaseJavaMigration() {
     }
 
     private fun createAdmin() {
-        val user = UserEntity.new(UUID.randomUUID()) {
+        admin = UserEntity.new(UUID.randomUUID()) {
             isMarketer = true
             nickname = "jakode"
             email = "aQqkDl/AqLw1yOs5DTm2T0R6QzCT+MmLtbEmHbFUQHc="
         }
         LocationEntity.new {
-            this.user = user
+            this.user = admin
             locationName = "Chenaran, Razavi Khorasan Province, Iran"
             latitude = 36.647764F
             longitude = 59.109951F
@@ -74,6 +78,14 @@ class V1__create_tables : BaseJavaMigration() {
                 preparationTime = row[13].toInt()
                 volume = if (row[14] == "Null") null else row[14]
             }
+        }
+    }
+
+    private fun addComment() {
+        CommentEntity.new {
+            this.user = admin
+            food = FoodEntity[6]
+            content = "I like that pizza :)"
         }
     }
 }

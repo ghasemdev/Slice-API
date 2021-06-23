@@ -11,7 +11,9 @@ import org.koin.ktor.ext.inject
 import routes.validation.ValidationService
 import utils.PreparationTime
 import utils.Price
+import utils.RecordNotExistException
 import utils.Score
+import java.util.*
 
 fun Route.foodsRoute() {
     val validationService: ValidationService by inject()
@@ -113,10 +115,30 @@ fun Route.foodsRoute() {
                     } else respond(HttpStatusCode.Unauthorized, ErrorResponse("Auth token is invalid!!!"))
                 }
             }
-        }
 
-        get("/{id}") {
+            get("/{id}") {
+                with(call) {
+                    val token = tokenParser
+                    val userId = token?.id
 
+                    // Validate token
+                    if (userId != null && validationService.validateToken(userId)) {
+                        val foodId = parameters["id"]?.trim()?.toLong()
+                            ?: return@get respond(HttpStatusCode.BadRequest)
+
+                        getFood(foodsService, userId, foodId)
+                    } else respond(HttpStatusCode.Unauthorized, ErrorResponse("Auth token is invalid!!!"))
+                }
+            }
         }
+    }
+}
+
+private suspend fun ApplicationCall.getFood(foodsService: FoodsService, userId: String?, foodId: Long) {
+    try {
+        val food = foodsService.get(UUID.fromString(userId), foodId)
+        respond(food)
+    } catch (exception: RecordNotExistException) {
+        respond(HttpStatusCode.BadRequest, ErrorResponse(exception.message!!))
     }
 }

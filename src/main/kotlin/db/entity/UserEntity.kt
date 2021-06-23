@@ -3,10 +3,7 @@ package db.entity
 import db.table.LocationsTable
 import db.table.UsersTable
 import db.table.WishlistTable
-import model.Email
-import model.Location
-import model.Phone
-import model.User
+import model.*
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -48,4 +45,11 @@ val UserEntity.asUser: User
         locations = this.locations.toList().map {
             Location(it.locationName, it.latitude, it.longitude)
         }
+    )
+
+val UserEntity.asUserComment: UserComment
+    get() = UserComment(
+        isMarketer = this.isMarketer,
+        nickname = this.nickname,
+        profilePicture = profilePicture.let { "/files/pictures/profile/${crypto.urlEncoding(this.id.toString())}" },
     )

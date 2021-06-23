@@ -1,7 +1,7 @@
 package db.table
 
 import model.FoodCategory
-import model.Food
+import model.FoodItems
 import model.FoodSize
 import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.sql.ResultRow
@@ -34,21 +34,15 @@ object FoodsTable : LongIdTable() {
     val volume = varchar("volume", 50).nullable()
 }
 
-val ResultRow.asFood: Food
-    get() = Food(
+val ResultRow.asFoodItems: FoodItems
+    get() = FoodItems(
         id = this[FoodsTable.id].value,
         isActive = this[FoodsTable.isActive],
-        category = this[FoodsTable.category],
-        size = this[FoodsTable.size],
         name = this[FoodsTable.name],
         picture = this[FoodsTable.picture],
-        quantity = this[FoodsTable.quantity],
-        salesNumber = this[FoodsTable.salesNumber],
         price = this[FoodsTable.price],
         discount = this[FoodsTable.discount],
         score = this[FoodsTable.score],
-        votersNumber = this[FoodsTable.votersNumber],
         details = this[FoodsTable.details],
         preparationTime = this[FoodsTable.preparationTime],
-        volume = this[FoodsTable.volume],
     )

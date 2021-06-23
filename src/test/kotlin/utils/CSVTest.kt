@@ -3,7 +3,7 @@ package utils
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import model.FoodCategory
-import model.Food
+import model.FoodItems
 import model.FoodSize
 import org.junit.jupiter.api.Test
 
@@ -11,10 +11,10 @@ class CSVTest {
 
     @Test
     fun `read csv file`() = runBlocking {
-        val foods = mutableListOf<Food>()
+        val foods = mutableListOf<FoodItems>()
         CSV.readFile(delimiter = ';', path = "src/test/resources/csv/", name = "pizza.txt") {
             foods.add(
-                Food(
+                FoodItems(
                     id = it[0].toLong(),
                     isActive = it[1].toInt() == 1,
                     category = FoodCategory.getEnum(it[2]),
