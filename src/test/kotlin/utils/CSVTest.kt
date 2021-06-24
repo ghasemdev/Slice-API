@@ -12,7 +12,7 @@ class CSVTest {
     @Test
     fun `read csv file`() = runBlocking {
         val foods = mutableListOf<FoodItems>()
-        CSV.readFile(delimiter = ';', path = "src/test/resources/csv/", name = "pizza.txt") {
+        CSV.readFile(delimiter = ';', path = "src/test/resources/csv/", name = "foods.txt") {
             foods.add(
                 FoodItems(
                     id = it[0].toLong(),

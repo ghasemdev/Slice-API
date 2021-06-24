@@ -29,7 +29,7 @@ object FoodsTable : LongIdTable() {
     val discount = integer("discount").default(0)
     val score = float("score").default(0F)
     val votersNumber = integer("votersNumber").default(0)
-    val details = varchar("details", 500)
+    val details = varchar("details", 500).nullable()
     val preparationTime = integer("preparationTime").default(0)
     val volume = varchar("volume", 50).nullable()
 }

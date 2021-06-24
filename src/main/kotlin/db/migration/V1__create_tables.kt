@@ -61,7 +61,7 @@ class V1__create_tables : BaseJavaMigration() {
     }
 
     private fun importData() {
-        CSV.readFile(delimiter = ';', path = "src/main/resources/csv/", name = "pizza.txt") { row ->
+        CSV.readFile(delimiter = ';', path = "src/main/resources/csv/", name = "foods.txt") { row ->
             FoodEntity.new {
                 isActive = row[1].toInt() == 1
                 category = FoodCategory.getEnum(row[2])

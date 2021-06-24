@@ -21,7 +21,7 @@ data class Food(
     val discount: Int = 0,
     val score: Float = 0F,
     val votersNumber: Int = 0,
-    val details: String,
+    val details: String? = null,
     val preparationTime: Int = 0,
     val volume: String? = null,
     val comments: List<Comment>? = null
@@ -49,7 +49,7 @@ data class FoodItems(
     val price: Float,
     val discount: Int = 0,
     val score: Float = 0F,
-    val details: String,
+    val details: String? = null,
     val preparationTime: Int = 0,
 )
 
