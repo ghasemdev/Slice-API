@@ -5,11 +5,13 @@ import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import kpy.struct.Email
+import kpy.struct.Phone
+import kpy.util.crypto.Crypto
+import kpy.util.extension.toHex
 import model.*
 import org.koin.ktor.ext.inject
 import routes.validation.ValidationService
-import utils.Crypto
-import utils.toHex
 
 fun Route.userRoute() {
     val validationService: ValidationService by inject()
@@ -112,11 +114,11 @@ fun Route.userRoute() {
                         }
 
                         // phone validation
-                        if (phone != null && Phone.isValid(phone)) {
+                        if (phone != null && Phone(phone).isValid()) {
                             createUser(phone = phone, nickname = nickname, otp = otp)
                         }
                         // email validation
-                        else if (email != null && Email.isValid(email) && email.length <= 50) {
+                        else if (email != null && Email(email).isValid() && email.length <= 50) {
                             createUser(email = email, nickname = nickname, otp = otp)
                         } else {
                             respond(
@@ -149,11 +151,11 @@ fun Route.userRoute() {
                         }
 
                         // phone validation
-                        if (phone != null && Phone.isValid(phone)) {
+                        if (phone != null && Phone(phone).isValid()) {
                             getUser(phone = phone, otp = otp)
                         }
                         // email validation
-                        else if (email != null && Email.isValid(email) && email.length <= 50) {
+                        else if (email != null && Email(email).isValid() && email.length <= 50) {
                             getUser(email = email, otp = otp)
                         } else {
                             respond(

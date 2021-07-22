@@ -3,6 +3,9 @@ package utils
 import com.google.common.truth.Truth.assertThat
 import di.KoinTestExtension
 import di.ktorModuleTest
+import kpy.util.crypto.Crypto
+import kpy.util.extension.*
+import kpy.util.log.Log
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
@@ -29,7 +32,7 @@ class CryptoTest : KoinTest {
 
         assertThat(otp.isNumber()).isTrue()
         assertThat(otp.length).isEqualTo(5)
-        testLog("generate otp with out character") { otp }
+        Log.i(otp, "generate otp with out character")
     }
 
     @Test
@@ -39,7 +42,7 @@ class CryptoTest : KoinTest {
 
         assertThat(otp.isEnglish()).isTrue()
         assertThat(otp.length).isEqualTo(6)
-        testLog("generate otp", true) { otp }
+        Log.i(otp, "generate otp")
     }
 
     @Test
@@ -49,7 +52,7 @@ class CryptoTest : KoinTest {
 
         assertThat(otp.isEnglish()).isTrue()
         assertThat(otp.length).isEqualTo(8)
-        testLog("generate password with out symbols") { otp }
+        Log.i(otp, "generate password with out symbols")
     }
 
     @Test
@@ -58,7 +61,7 @@ class CryptoTest : KoinTest {
         val otp = crypto.generatePassword()
 
         assertThat(otp.length).isEqualTo(8)
-        testLog("generate password", true) { otp }
+        Log.i(otp, "generate password")
     }
 
     @Test
@@ -67,26 +70,26 @@ class CryptoTest : KoinTest {
         val hash = crypto.hashContent("1234")
 
         assertThat(hash.toHex()).isEqualTo("DA 4C 79 A8 FF E0 95 24 E8 E6 C3 1B C6 A1 AE 9B")
-        testLog("hash password toHex") { hash.toHex() }
+        Log.i(hash.toHex(), "hash password toHex")
 
         assertThat(hash.toReversedHex()).isEqualTo("9B AE A1 C6 1B C3 E6 E8 24 95 E0 FF A8 79 4C DA")
-        testLog("hash password toReversedHex") { hash.toReversedHex() }
+        Log.i(hash.toReversedHex(), "hash password toReversedHex")
 
         assertThat(hash.toDec()).isEqualTo("218761211682552241493623223019527198161174155")
-        testLog("hash password toDec") { hash.toDec() }
+        Log.i(hash.toDec(), "hash password toDec")
 
         assertThat(hash.toReversedDec()).isEqualTo("155174161198271952302323614922425516812176218")
-        testLog("hash password toReversedDec", true) { hash.toReversedDec() }
+        Log.i(hash.toReversedDec(), "hash password toReversedDec")
     }
 
     @Test
     @Order(6)
     fun cryptography() {
         val text = "hi my name is jakode"
-        testLog("cryptography text") { text }
+        Log.i(text, "cryptography text")
 
         val encrypt = crypto.encrypt(text)
-        testLog("cryptography encrypt", true) { encrypt }
+        Log.i(encrypt, "cryptography encrypt")
 
         val decrypt = crypto.decrypt(encrypt)
         assertThat(decrypt).isEqualTo(text)
@@ -97,16 +100,16 @@ class CryptoTest : KoinTest {
     fun `length hashes and encrypted content`() {
         val hashedPhone = crypto.hashContent("09152165050").toHex()
         val hashedEmail = crypto.hashContent("shirdelghasem79@gmail.com").toHex()
-        testLog("hashedPhone length") { hashedPhone.length }
-        testLog("hashedEmail length") { hashedEmail.length }
+        Log.i(hashedPhone.length, "hashedPhone length")
+        Log.i(hashedEmail.length, "hashedEmail length")
 
         assertThat(hashedPhone.length).isEqualTo(47)
         assertThat(hashedEmail.length).isEqualTo(47)
 
         val phoneEncrypt = crypto.encrypt("09309275920")
         val emailEncrypt = crypto.encrypt("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@gmail.com")
-        testLog("phoneEncrypt length") { phoneEncrypt.length }
-        testLog("emailEncrypt length", true) { emailEncrypt.length }
+        Log.i(phoneEncrypt.length, "phoneEncrypt length")
+        Log.i(emailEncrypt.length, "emailEncrypt length")
 
         assertThat(phoneEncrypt.length).isEqualTo(24)
         assertThat(emailEncrypt.length).isEqualTo(88)
@@ -117,11 +120,11 @@ class CryptoTest : KoinTest {
     fun `Url encoding`() {
         val originalUrl = "https://www.google.co.nz/?gfe_rd=cr&ei=dzbFV&gws_rd=ssl#q=java"
         val encodingUrl = crypto.urlEncoding(originalUrl)
-        testLog("encoding url") { encodingUrl }
+        Log.i(encodingUrl, "encoding url")
         assertThat(encodingUrl).isEqualTo("aHR0cHM6Ly93d3cuZ29vZ2xlLmNvLm56Lz9nZmVfcmQ9Y3ImZWk9ZHpiRlYmZ3dzX3JkPXNzbCNxPWphdmE=")
 
         val decodedUrl = crypto.urlDecoding(encodingUrl)
-        testLog("decoded url") { decodedUrl }
+        Log.i(decodedUrl, "decoded url")
         assertThat(decodedUrl).isEqualTo(originalUrl)
     }
 }

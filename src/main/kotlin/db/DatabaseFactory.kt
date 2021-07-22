@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kpy.io.environment
 import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
@@ -21,7 +22,7 @@ object DatabaseFactory {
     private val log = LoggerFactory.getLogger(this::class.java)
 
     init {
-        val dbUrl = System.getenv("DATABASE_URL")
+        val dbUrl = environment("DATABASE_URL")
         if (dbUrl != null) {
             val dbUri = URI(dbUrl)
             host = dbUri.host
@@ -31,11 +32,11 @@ object DatabaseFactory {
             dbUser = userInfo[0]
             dbPassword = userInfo[1]
         } else {
-            host = System.getenv("DB_HOST") ?: "localhost"
-            port = System.getenv("DB_PORT")?.toInt() ?: 5555
-            dbName = System.getenv("DB_NAME") ?: "slice_db"
-            dbUser = System.getenv("DB_USER") ?: "jakode2020"
-            dbPassword = System.getenv("DB_PASSWORD") ?: "e-UuWUX8=-(W)RGG"
+            host = environment("DB_HOST") ?: "localhost"
+            port = environment("DB_PORT")?.toInt() ?: 5555
+            dbName = environment("DB_NAME") ?: "slice_db"
+            dbUser = environment("DB_USER") ?: "jakode2020"
+            dbPassword = environment("DB_PASSWORD") ?: "e-UuWUX8=-(W)RGG"
         }
     }
 

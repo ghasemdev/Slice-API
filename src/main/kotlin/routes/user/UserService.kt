@@ -1,7 +1,7 @@
 package routes.user
 
-import model.Email
-import model.Phone
+import kpy.struct.Email
+import kpy.struct.Phone
 import model.User
 import model.UserResponse
 

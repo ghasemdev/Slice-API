@@ -1,7 +1,7 @@
 package routes.validation
 
-import model.Email
-import model.Phone
+import kpy.struct.Email
+import kpy.struct.Phone
 
 interface ValidationService {
     suspend fun sendOtp(phone: Phone, massage: String)

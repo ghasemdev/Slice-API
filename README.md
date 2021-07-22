@@ -2,6 +2,7 @@
 This is an online pizza shopping app
 
 # Libraries used
+* Kpy - Library for easy programing
 * Coroutines - synchronization programming
 * Koin - dependency injection 
 * Ktor - Kotlin async web framework

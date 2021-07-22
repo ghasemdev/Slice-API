@@ -1,5 +1,7 @@
 package di
 
+import kpy.io.property
+import kpy.util.crypto.Crypto
 import model.EmailServer
 import org.koin.dsl.module
 import routes.files.pictures.PictureService
@@ -12,7 +14,6 @@ import routes.validation.ValidationService
 import routes.validation.ValidationServiceImp
 import routes.wishlist.WishlistService
 import routes.wishlist.WishlistServiceImp
-import utils.Crypto
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 
@@ -33,21 +34,21 @@ val ktorModule = module {
     // Email
     single {
         EmailServer(
-            email = "pizzaslice2022@gmail.com",
-            username = "pizzaslice2022@gmail.com",
-            password = "=5QTXk4BRwL^W+b>"
+            property("EMAIL_SERVER_EMAIL")!!,
+            property("EMAIL_SERVER_USERNAME")!!,
+            property("EMAIL_SERVER_PASSWORD")!!
         )
     }
 
     // Validation Service
     single<ValidationService> {
         ValidationServiceImp(
-            apiKey = "4B55724F72304D665351364E6145654C766C50544C566D78594845466C346A34515754617539416A3658553D",
+            apiKey = property("SMS_APIKEY")!!,
             emailServer = get(),  // get() Will resolve EmailServer
             expiredTime = Duration.minutes(2)
         )
     }
 
     // Crypto
-    single { Crypto(hashSalt = "h9UZaWD*bn,c^';\$rzZ_USU6zHTE`F?c", secretKey = "(8(NqRm4_bgqtuN:=WTBuJ9-vS*M;S.(") }
+    single { Crypto(hashSalt = property("CRYPTO_HASH_SALT")!!, secretKey = property("CRYPTO_SECRET_KEY")!!) }
 }

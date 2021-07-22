@@ -9,9 +9,9 @@ import db.table.OtpsTable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
-import model.Email
+import kpy.struct.Email
+import kpy.struct.Phone
 import model.EmailServer
-import model.Phone
 import org.apache.commons.mail.DefaultAuthenticator
 import org.apache.commons.mail.SimpleEmail
 import org.jetbrains.exposed.sql.*

@@ -7,11 +7,11 @@ import io.ktor.http.content.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import kpy.util.crypto.Crypto
 import model.ErrorResponse
 import model.tokenParser
 import org.koin.ktor.ext.inject
 import routes.validation.ValidationService
-import utils.Crypto
 
 private const val PROFILE = "profile"
 

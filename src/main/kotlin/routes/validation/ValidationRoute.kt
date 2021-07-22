@@ -8,12 +8,12 @@ import io.ktor.routing.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import model.Email
+import kpy.struct.Email
+import kpy.struct.Phone
+import kpy.util.crypto.Crypto
+import kpy.util.extension.toHex
 import model.ErrorResponse
-import model.Phone
 import org.koin.ktor.ext.inject
-import utils.Crypto
-import utils.toHex
 
 fun Route.validationRoute() {
     val validationService: ValidationService by inject()
@@ -62,12 +62,12 @@ fun Route.validationRoute() {
                 val massage = "« Slice »\nYour membership verification code :\n $otp"
 
                 // phone validation
-                if (phone != null && Phone.isValid(phone)) {
+                if (phone != null && Phone(phone).isValid()) {
                     sendOtp(phone, massage, otpHashed)
                     respond(HttpStatusCode.NoContent)
                 }
                 // email validation
-                else if (email != null && Email.isValid(email) && email.length <= 50) {
+                else if (email != null && Email(email).isValid() && email.length <= 50) {
                     sendOtpWithEmail(email, massage, otpHashed)
                     respond(HttpStatusCode.NoContent)
                 } else {

@@ -3,12 +3,14 @@ package db.entity
 import db.table.LocationsTable
 import db.table.UsersTable
 import db.table.WishlistTable
+import kpy.struct.Email
+import kpy.struct.Phone
+import kpy.util.crypto.Crypto
 import model.*
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.koin.java.KoinJavaComponent.inject
-import utils.Crypto
 import java.util.*
 
 class UserEntity(id: EntityID<UUID>) : UUIDEntity(id) {

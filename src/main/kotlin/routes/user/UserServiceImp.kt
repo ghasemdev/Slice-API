@@ -5,6 +5,8 @@ import db.entity.UserEntity
 import db.entity.asUser
 import db.entity.new
 import db.table.UsersTable
+import kpy.struct.Email
+import kpy.struct.Phone
 import model.*
 import utils.JwtConfig
 
